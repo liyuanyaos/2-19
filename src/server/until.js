@@ -8,12 +8,12 @@ const service = axios.create({
 	// baseURL:"http://47.95.13.131:8081",
 	timeout: 3 * 1000, // 请求超时时间
 })
-
+service.defaults.withCredentials = true; // 跨域请求时是否需要访问凭证
 service.interceptors.request.use(config => {
 	// 这里可以进行请求加密等操作。如添加token,cookie，修改数据传输格式等。
-	// console.log(window.localStorage.getItem('Token'));
-	// config.headers['Token'] = window.localStorage.getItem('Token');
-	// config.headers['Content-type'] = 'application/json';
+	console.log(window.localStorage.getItem('Token'));
+	config.headers['Token'] = window.localStorage.getItem('Token');
+	config.headers['Content-type'] = 'application/json';
 	return config;
 })
 // export default service;

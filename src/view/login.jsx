@@ -28,17 +28,6 @@ function Login(props) {
   };
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
-    let data = {
-      username: values.username,
-      password: values.password
-    };
-    adminlogin(data).then((res) => {
-      console.log("token", res.data.data);
-      window.localStorage.setItem("Token", res.data.data);
-      gethealthlist().then((res) => {
-        props.fn(res.data.data);
-      });
-    });
     if (values.username === "admin" && values.password === "123456") {
       if (values.yanzhen === useStateRef.current) {
         let data = {
@@ -49,6 +38,7 @@ function Login(props) {
           console.log("token", res.data.data);
           window.localStorage.setItem("Token", res.data.data);
           gethealthlist().then((res) => {
+            console.log(res.data.data);
             props.fn(res.data.data);
           });
         });

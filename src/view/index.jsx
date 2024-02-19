@@ -19,42 +19,49 @@ function Index(props) {
   const dispatch = useDispatch();
   const newState = useSelector((state) => state);
   const { arr, Tabarr } = store.getState().cart;
-  console.log(Tabarr);
+  console.log(Tabarr,arr);
   useEffect(() => {
     function fors(arr, path) {
+      console.log(arr, path);
       let arrs = [];
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i].children) {
-          let obj = {
-            key: JSON.stringify({ name: arr[i].name, title: arr[i].meta.title }),
-            label: arr[i].meta.title,
-            component: arr[i].component,
-            children: fors(arr[i].children, arr[i].name)
-          };
-          arrs.push(obj);
-        } else {
-          // console.log(arr[i].name, arr[i].meta.title);
-          let str = arr[i].name[0] === "/" ? "/index/" + path + arr[i].name : "/index/" + path + "/" + arr[i].name;
-          let obj = {
-            key: JSON.stringify({ name: arr[i].name, title: arr[i].meta.title }),
-            label: <Link to={str}>{arr[i].meta.title}</Link>,
-            component: arr[i].component,
-            title: arr[i].name
-          };
-          arrs.push(obj);
+      if (arr.length > 0) {
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].children) {
+            let obj = {
+              key: JSON.stringify({ name: arr[i].name, title: arr[i].meta.title }),
+              label: arr[i].meta.title,
+              component: arr[i].component,
+              children: fors(arr[i].children, arr[i].name)
+            };
+            arrs.push(obj);
+          } else {
+            // console.log(arr[i].name, arr[i].meta.title);
+            let str = arr[i].name[0] === "/" ? "/index/" + path + arr[i].name : "/index/" + path + "/" + arr[i].name;
+            let obj = {
+              key: JSON.stringify({ name: arr[i].name, title: arr[i].meta.title }),
+              label: <Link to={str}>{arr[i].meta.title}</Link>,
+              component: arr[i].component,
+              title: arr[i].name
+            };
+            arrs.push(obj);
+          }
         }
       }
+
       return arrs;
-    }       
+    }
     function getdata() {
-      gethealthlist().then((res) => {
-        console.log(res.data.data);
-        setImgs(fors(JSON.parse(window.localStorage.getItem("routex"))));
-        console.log('imgs',fors(res.data.data));
-        window.localStorage.setItem("routex", JSON.stringify(res.data.data));
-      }).catch((err)=>{
-        setImgs(fors(JSON.parse(window.localStorage.getItem("routex"))));
-      })
+      gethealthlist()
+        .then((res) => {
+          console.log(res.data.data);
+          window.localStorage.setItem("routex", JSON.stringify(res.data.data));
+          setImgs(fors(JSON.parse(window.localStorage.getItem("routex"))));
+          console.log("imgs", fors(res.data.data));
+          window.localStorage.setItem("routex", JSON.stringify(res.data.data));
+        })
+        .catch((err) => {
+          setImgs(fors(JSON.parse(window.localStorage.getItem("routex"))));
+        });
     }
     getdata();
   }, []);
@@ -113,12 +120,11 @@ function Index(props) {
     if (index < Tabarr.length) {
       console.log([JSON.stringify({ name: Tabarr[index].address.split("/").at(-1), title: Tabarr[index].title })]);
       setselectM([JSON.stringify({ name: Tabarr[index].address.split("/").at(-1), title: Tabarr[index].title })]);
-    }else {
-      index = index-1;
-      if(index<0)index=0
+    } else {
+      index = index - 1;
+      if (index < 0) index = 0;
       setselectM([JSON.stringify({ name: Tabarr[0].address.split("/").at(-1), title: Tabarr[0].title })]);
     }
-
 
     // props.history.push(Tabarr[index].address)
     navigate(Tabarr[index].address);

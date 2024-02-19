@@ -1,7 +1,7 @@
 import http from "./until";
 console.log(http);
 export function adminlogin(data,headers){
-	return http.post('api/login', data, headers)
+	return http.post('api/Login', data, headers)
 }
 
 export function gethealthlist(data,headers){
